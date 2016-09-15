@@ -26,3 +26,5 @@ time.sleep(5)
 
 m1_pwm.stop()
 m2_pwm.stop()
+
+GPIO.cleanup()
