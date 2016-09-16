@@ -32,20 +32,45 @@ class EnginesDriver:
         self.m1_pwm.stop
         self.m1_pwm.stop
 
+    def backward(self):
+        GPIO.output(self.m1_direct, GPIO.LOW)
+        GPIO.output(self.m2_direct, GPIO.LOW)
+        self.m1_pwm.start(50)
+        self.m2_pwm.start(50)
+
     def left(self):
-        pass
+        GPIO.output(self.m1_direct, GPIO.HIGH)
+        GPIO.output(self.m2_direct, GPIO.LOW)
+        self.m1_pwm.start(50)
+        self.m2_pwm.start(50)
 
     def right(self):
-        pass
+        GPIO.output(self.m1_direct, GPIO.LOW)
+        GPIO.output(self.m2_direct, GPIO.HIGH)
+        self.m1_pwm.start(50)
+        self.m2_pwm.start(50)
 
-    def accelerate(self):
-        pass
+    def accelerate(self, acc):
+        self.m1_pwm.ChangeDutyCycle(acc)
+        self.m2_pwm.ChangeDutyCycle(acc)
 
 #tests
 d1 = EnginesDriver(18, 17, 27, 22)
 
 d1.forward()
 time.sleep(5)
+d1.left()
+time.sleep(1)
+d1.forward()
+time.sleep(2)
+d1.right()
+time.sleep(1)
+d1.backward()
+time.sleep(3)
+d1.forward()
+time.sleep(1)
+d1.accelerate(75)
+time.sleep(2)
 d1.stop()
 
 GPIO.cleanup()
