@@ -22,12 +22,12 @@ class EchoSR04:
         GPIO.output(self.TRIG, False)
         #pomiar
         while( GPIO.input(self.ECHO) == 0 ):
-            pulse_start = time.time()
+            self.pulse_start = time.time()
         while( GPIO.input(self.ECHO) == 1 ):
-            pulse_end = time.time()
+            self.pulse_end = time.time()
         #przeliczenie pomiaru
-        pulse_duration = pulse_end - pulse_start
-        distance = pulse_duration * 17150
-        distance = round( distance, 2)
+        self.pulse_duration = self.pulse_end - self.pulse_start
+        self.distance = self.pulse_duration * 17150
+        self.distance = round( self.distance, 2)
 
-        return distance
+        return self.distance

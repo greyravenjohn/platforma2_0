@@ -10,6 +10,7 @@ from echo import *
 def main():
     
     #init GPIO
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     #init screen
     stdscr = c.initscr()
@@ -28,16 +29,17 @@ def main():
     mode.display_fresh( a )
     #init SYSTEM box
     sys = Window( stdscr, 4, 14, int((max_x)/5)-10, 5 )
-    s = "00:00:00\nlocalhost"
+    s = "00:00:00\nhost"
     sys.display_fresh( s )
     set_host = socket.gethostname()
     #init ECHO box
     echo = Window( stdscr, 4, 14, int((max_x)/5)-10, 9 )
-    d = "SONAR:\n00.00cm" 
+    echo1 = EchoSR04( 23, 24 )
+    d = " " + str( echo1.measure_dist() ) + "cm "
     echo.display_fresh( d )
     #init INFO box
     info = Window( stdscr, 9, 24, int((2*max_x)/3), 2 )
-    e = "MODE A:\n      \nKEY_UP\nKEY_DOWN\nKEY_LEFT\nKEY_RIGHT\nMODE A/B: a/b"
+    e = "MODE A:\nstop:_\nKEY_UP\nKEY_DOWN\nKEY_LEFT\nKEY_RIGHT\nMODE A/B: a/b"
     f = "MODE B:\n      \n      \nSTART: s\nSTOP: d \n         \nMODE A/B: a/b"
     info.display_fresh( e )
     #init STATUS box
@@ -75,6 +77,8 @@ def main():
                 status.display_fresh( chr(key) )
             elif( key == c.KEY_RIGHT ):
                 status.display_fresh( chr(key) )
+            elif( key == 32 ):  #space
+                status.display_fresh( "_" )
             else:
                 pass
             info.display_fresh( e )
@@ -92,7 +96,10 @@ def main():
         s = set_time + '\n' + set_host
         sys.display_fresh( s )
         #odswieza dystans
-    
+        d = " " + str( echo1.measure_dist() ) + "cm "
+        echo.display_fresh( d )
+        time.sleep(0.2)
+
     #deinicjalizuje okno
     c.endwin()
     #czysci ustawienia GPIO
